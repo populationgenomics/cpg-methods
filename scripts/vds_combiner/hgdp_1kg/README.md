@@ -1,6 +1,6 @@
 # Generate combined VDS for HGDP + 1kG datasets
 
-This runs a Hail query script in Dataproc using Hail Batch in order to create a combined VDS file for the HGDP + 1kG datasets. To run, use conda to install the analysis-runner, then execute the following command:
+This runs a Hail query script in Dataproc using Hail Batch in order to create a combined VDS file for the HGDP + 1kG datasets. To run, use pip to install the analysis-runner, then execute the following command:
 
 ```sh
 analysis-runner --dataset cpg-methods \
