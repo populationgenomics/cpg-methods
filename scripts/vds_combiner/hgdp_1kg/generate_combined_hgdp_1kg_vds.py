@@ -17,7 +17,7 @@ def query():
     combiner = hl.vds.new_combiner(
         output_path=output_path('hgdp_1kg.vds'),
         temp_path=output_path('hgdp_1kg.vds', 'tmp'),
-        vds_paths=vdses,
+        vds_paths=[HGDP, ONEKG],
         use_genome_default_intervals=True,
     )
 
