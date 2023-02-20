@@ -2,12 +2,10 @@
 
 """Pipeline for choosing markers for HGDP/1kG datasets"""
 
-from cpg_utils.hail_batch import init_batch, output_path
+from cpg_utils.hail_batch import init_batch, output_path, dataset_path
 import hail as hl
 
-HGDP = 'gs://cpg-hgdp-test/vds/1-0.vds'
-
-ONEKG = 'gs://cpg-thousand-genomes-test/vds/1-0.vds'
+HGDP_1KG = dataset_path('vds/hgdp_1kg/v0/hgdp_1kg.vds')
 
 NUM_ROWS_BEFORE_LD_PRUNE = 200000
 
@@ -17,24 +15,18 @@ def main():
 
     init_batch()
 
-    hgdp_vds = hl.vds.read_vds(HGDP)
-    onekg_vds = hl.vds.read_vds(ONEKG)
+    hgdp_1kg = hl.vds.read_vds(HGDP_1KG)
 
-    # Add GT field and make dense MTs
-    hgdp_gt = hgdp_vds.variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(hgdp_vds.variant_data.LGT, hgdp_vds.variant_data.LA))
-    onekg_gt = onekg_vds.variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(onekg_vds.variant_data.LGT, onekg_vds.variant_data.LA))
-    hgdp_mt = hl.vds.to_dense_mt(hl.vds.VariantDataset(hgdp_vds.reference_data, hgdp_gt))
-    onekg_mt = hl.vds.to_dense_mt(hl.vds.VariantDataset(onekg_vds.reference_data, onekg_gt))
-
-    # Join datasets
-    hgdp_1kg = hgdp_mt.union_cols(onekg_mt)
+    # Add GT field and make dense MT
+    hgdp_1kg_gt = hgdp_1kg.variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(hgdp_1kg.variant_data.LGT, hgdp_1kg.variant_data.LA))
+    hgdp_1kg = hl.vds.to_dense_mt(hl.vds.VariantDataset(hgdp_1kg.reference_data, hgdp_1kg_gt))
 
     # run variant QC
     hgdp_1kg = hl.variant_qc(hgdp_1kg)
     # choose variants based off of gnomAD v3 parameters
     # Inbreeding coefficient > -0.25 (no excess of heterozygotes)
     # Must be single nucleotide variants that are autosomal (i.e., no sex), and bi-allelic
-    # Have an allele frequency above 0.1%
+    # Have an allele frequency above 1% (note deviation from gnomAD, which is 0.1%)
     # Have a call rate above 99%
     hgdp_1kg = hgdp_1kg.annotate_rows(
         IB=hl.agg.inbreeding(
@@ -52,7 +44,7 @@ def main():
     # downsize input variants for ld_prune
     # otherwise, persisting the pruned_variant_table will cause
     # script to fail. See https://github.com/populationgenomics/ancestry/pull/79
-    hgdp_1kg = hgdp_1kg.cache()
+    hgdp_1kg = hgdp_1kg.checkpoint()
     nrows = hgdp_1kg.count_rows()
     print(f'hgdp_1kg.count_rows() = {nrows}')
     hgdp_1kg = hgdp_1kg.sample_rows(
