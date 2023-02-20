@@ -15,7 +15,7 @@ dataproc.hail_dataproc_job(
     'generate_combined_hgdp_1kg_vds.py',
     max_age='6h',
     init=['gs://cpg-common-main/hail_dataproc/install_common.sh'],
-    job_name=f'hgdp_1kg_vds',
+    job_name='hgdp_1kg_vds',
 )
 
 batch.run()
