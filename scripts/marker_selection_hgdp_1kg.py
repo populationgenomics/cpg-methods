@@ -45,7 +45,8 @@ def main():
     # downsize input variants for ld_prune
     # otherwise, persisting the pruned_variant_table will cause
     # script to fail. See https://github.com/populationgenomics/ancestry/pull/79
-    hgdp_1kg = hgdp_1kg.checkpoint()
+    checkpoint_path = output_path('hgdp_1kg_pre_pruning.mt', 'tmp')
+    hgdp_1kg = hgdp_1kg.checkpoint(checkpoint_path, overwrite=True)
     nrows = hgdp_1kg.count_rows()
     print(f'hgdp_1kg.count_rows() = {nrows}')
     hgdp_1kg = hgdp_1kg.sample_rows(

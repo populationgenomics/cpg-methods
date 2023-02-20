@@ -2,11 +2,11 @@
 
 """Create combined HGDP + 1kG VDS"""
 
-from cpg_utils.hail_batch import output_path
+from cpg_utils.hail_batch import output_path, dataset_path
 import hail as hl
 
-HGDP = 'gs://cpg-hgdp-test/vds/1-0.vds'
-ONEKG = 'gs://cpg-thousand-genomes-test/vds/1-0.vds'
+HGDP = dataset_path('vds/1-0.vds', dataset='hgdp')
+ONEKG = dataset_path('vds/1-0.vds', dataset='thousand-genomes')
 
 
 def query():
@@ -14,10 +14,7 @@ def query():
 
     hl.init(default_reference='GRCh38')
 
-    vdses = [
-        'HGDP',
-        'ONEKG'
-    ]
+    vdses = [HGDP, ONEKG]
 
     combiner = hl.vds.new_combiner(
         output_path=output_path('hgdp_1kg.vds'),
