@@ -14,8 +14,6 @@ def query():
 
     hl.init(default_reference='GRCh38')
 
-    vdses = [HGDP, ONEKG]
-
     combiner = hl.vds.new_combiner(
         output_path=output_path('hgdp_1kg.vds'),
         temp_path=output_path('hgdp_1kg.vds', 'tmp'),
