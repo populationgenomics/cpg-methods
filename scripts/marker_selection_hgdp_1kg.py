@@ -15,11 +15,12 @@ def main():
 
     init_batch()
 
-    hgdp_1kg = hl.vds.read_vds(HGDP_1KG)
+    vds = hl.vds.read_vds(HGDP_1KG)
 
     # Add GT field and make dense MT
-    hgdp_1kg_gt = hgdp_1kg.variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(hgdp_1kg.variant_data.LGT, hgdp_1kg.variant_data.LA))
-    hgdp_1kg = hl.vds.to_dense_mt(hl.vds.VariantDataset(hgdp_1kg.reference_data, hgdp_1kg_gt))
+    variant_data = vds.variant_data
+    variant_data = variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(variant_data.LGT, variant_data.LA))
+    mt = hl.vds.to_dense_mt(vds)
 
     # run variant QC
     hgdp_1kg = hl.variant_qc(hgdp_1kg)
