@@ -5,7 +5,7 @@
 from cpg_utils.hail_batch import init_batch, output_path, dataset_path
 import hail as hl
 
-HGDP_1KG = dataset_path('vds/hgdp_1kg/v0/hgdp_1kg.vds')
+HGDP_1KG = dataset_path('vds/v0/hgdp_1kg.vds')
 
 NUM_ROWS_BEFORE_LD_PRUNE = 200000
 
