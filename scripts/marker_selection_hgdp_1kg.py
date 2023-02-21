@@ -5,7 +5,7 @@
 from cpg_utils.hail_batch import init_batch, output_path, dataset_path
 import hail as hl
 
-HGDP_1KG = dataset_path('vds/v0/hgdp_1kg.vds')
+HGDP_1KG = dataset_path('vds/1-0.vds')
 
 NUM_ROWS_BEFORE_LD_PRUNE = 200000
 
@@ -57,11 +57,8 @@ def main():
     pruned_variant_table = hl.ld_prune(
         hgdp_1kg.GT, r2=0.1, bp_window_size=500000
     )
-    hgdp_1kg = hgdp_1kg.filter_rows(
-        hl.is_defined(pruned_variant_table[hgdp_1kg.row_key])
-    )
-    mt_path = output_path('hgdp_1kg_filtered_variants.mt')
-    hgdp_1kg.write(mt_path)
+    pruned_variant_table_path = output_path('hgdp_1kg_pruned_variants.mt')
+    pruned_variant_table.write(pruned_variant_table_path)
 
 
 if __name__ == '__main__':
