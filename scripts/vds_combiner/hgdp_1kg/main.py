@@ -8,7 +8,7 @@ service_backend = hb.ServiceBackend(
     billing_project=os.getenv('HAIL_BILLING_PROJECT'), bucket=os.getenv('HAIL_BUCKET')
 )
 
-batch = hb.Batch(name="hgdp-1kg-vds", backend=service_backend)
+batch = hb.Batch(name='hgdp-1kg-vds', backend=service_backend)
 
 dataproc.hail_dataproc_job(
     batch,
