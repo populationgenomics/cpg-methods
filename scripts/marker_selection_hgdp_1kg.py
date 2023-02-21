@@ -20,7 +20,7 @@ def main():
     # Add GT field and make dense MT
     variant_data = vds.variant_data
     variant_data = variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(variant_data.LGT, variant_data.LA))
-    hgdp_1kg = hl.vds.to_dense_mt(vds)
+    hgdp_1kg = hl.vds.to_dense_mt(vds.reference_data, variant_data)
 
     # run variant QC
     hgdp_1kg = hl.variant_qc(hgdp_1kg)
