@@ -3,9 +3,13 @@
 import os
 import hailtop.batch as hb
 from analysis_runner import dataproc
+from cpg_utils.hail_batch import get_config, remote_tmpdir
+
+config = get_config()
 
 service_backend = hb.ServiceBackend(
-    billing_project=os.getenv('HAIL_BILLING_PROJECT'), bucket=os.getenv('HAIL_BUCKET')
+    billing_project=config['hail']['billing_project'],
+    remote_tmpdir=remote_tmpdir(),
 )
 
 batch = hb.Batch(name='hgdp-1kg-vds', backend=service_backend)
