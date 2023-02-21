@@ -1,6 +1,5 @@
 """Entry point for the analysis runner."""
 
-import os
 import hailtop.batch as hb
 from analysis_runner import dataproc
 from cpg_utils.hail_batch import get_config, remote_tmpdir
