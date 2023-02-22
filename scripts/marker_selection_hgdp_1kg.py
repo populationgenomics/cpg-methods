@@ -17,12 +17,12 @@ def main():
 
     vds = hl.vds.read_vds(HGDP_1KG)
 
-    # Add GT field and make dense MT
-    variant_data = vds.variant_data
-    variant_data = variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(variant_data.LGT, variant_data.LA))
+    # # Add GT field and make dense MT
+    # variant_data = vds.variant_data
+    # variant_data = variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(variant_data.LGT, variant_data.LA))
     # split multiallelics, then densify
     vds = hl.vds.split_multi(vds, filter_changed_loci=True)
-    hgdp_1kg = hl.vds.to_dense_mt(hl.vds.VariantDataset(vds.reference_data, variant_data))
+    hgdp_1kg = hl.vds.to_dense_mt(vds)
 
     # run variant QC
     hgdp_1kg = hl.variant_qc(hgdp_1kg)
