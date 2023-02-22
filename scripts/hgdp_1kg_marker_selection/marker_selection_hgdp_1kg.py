@@ -17,9 +17,6 @@ def main():
 
     vds = hl.vds.read_vds(HGDP_1KG)
 
-    # # Add GT field and make dense MT
-    # variant_data = vds.variant_data
-    # variant_data = variant_data.transmute_entries(GT = hl.vds.lgt_to_gt(variant_data.LGT, variant_data.LA))
     # split multiallelics, then densify
     vds = hl.vds.split_multi(vds, filter_changed_loci=True)
     hgdp_1kg = hl.vds.to_dense_mt(vds)
@@ -48,10 +45,8 @@ def main():
     # otherwise, persisting the pruned_variant_table will cause
     # script to fail. See https://github.com/populationgenomics/ancestry/pull/79
     checkpoint_path = output_path('hgdp_1kg_pre_pruning.mt', 'tmp')
-    if not hl.hadoop_exists(checkpoint_path):
-        hgdp_1kg = hgdp_1kg.checkpoint(checkpoint_path, overwrite=True)
+    hgdp_1kg = hgdp_1kg.checkpoint(checkpoint_path, overwrite=True)
 
-    hgdp_1kg = hl.read_matrix_table(checkpoint_path)
     nrows = hgdp_1kg.count_rows()
     print(f'hgdp_1kg.count_rows() = {nrows}')
     hgdp_1kg = hgdp_1kg.sample_rows(
