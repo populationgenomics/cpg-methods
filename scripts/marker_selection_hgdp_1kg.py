@@ -57,7 +57,7 @@ def main():
     pruned_variant_table = hl.ld_prune(
         hgdp_1kg.GT, r2=0.1, bp_window_size=500000
     )
-    pruned_variant_table_path = output_path('hgdp_1kg_pruned_variants.ht')
+    pruned_variant_table_path = output_path('pruned_variants.ht')
     pruned_variant_table.write(pruned_variant_table_path)
 
 
