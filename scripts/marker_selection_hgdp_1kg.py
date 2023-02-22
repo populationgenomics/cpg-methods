@@ -15,7 +15,9 @@ def main():
 
     init_batch()
 
+    # read in vds and split multiallelics
     vds = hl.vds.read_vds(HGDP_1KG)
+    vds = hl.vds.split_multi(vds, filter_changed_loci=True)
 
     # Add GT field and make dense MT
     variant_data = vds.variant_data
