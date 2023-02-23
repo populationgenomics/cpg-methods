@@ -16,7 +16,8 @@ batch = hb.Batch(name='hgdp-1kg-vds', backend=service_backend)
 dataproc.hail_dataproc_job(
     batch,
     'generate_combined_hgdp_1kg_vds.py',
-    max_age='6h',
+    max_age='12h',
+    num_secondary_workers=20,
     init=['gs://cpg-common-main/hail_dataproc/install_common.sh'],
     job_name='hgdp_1kg_vds',
 )
