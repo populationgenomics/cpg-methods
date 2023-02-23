@@ -17,6 +17,7 @@ dataproc.hail_dataproc_job(
     batch,
     'marker_selection_hgdp_1kg.py',
     max_age='6h',
+    num_secondary_workers=20,
     init=['gs://cpg-common-main/hail_dataproc/install_common.sh'],
     job_name='hgdp_1kg_marker_selection',
 )
