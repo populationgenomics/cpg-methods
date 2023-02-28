@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Create combined HGDP + 1kG + PROPHECY VDS"""
+"""Create combined hgdp-1kG + PROPHECY VDS"""
 
 from cpg_utils.hail_batch import output_path, dataset_path
 import hail as hl
@@ -10,7 +10,7 @@ PROPHECY = dataset_path('vds/1-1.vds', dataset='prophecy')
 
 
 def query():
-    """Create combined HGDP + 1kG + PROPHECY VDS, using the VDS combiner"""
+    """Create combined hgdp-1kG + PROPHECY VDS, using the VDS combiner"""
 
     hl.init(default_reference='GRCh38')
 
