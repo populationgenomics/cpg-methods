@@ -5,8 +5,6 @@
 from cpg_utils.hail_batch import output_path, dataset_path
 import hail as hl
 
-HGDP_ONEKG = dataset_path('vds/1-0.vds', dataset='hgdp-1kg')
-PROPHECY = dataset_path('vds/1-1.vds', dataset='prophecy')
 HGDP_1KG_PROPHECY = dataset_path('vds/combiner/1-0.vds')
 
 NUM_ROWS_BEFORE_LD_PRUNE = 200000
@@ -16,16 +14,6 @@ def main():
     """choosing markers for HGDP/1kG datasets according to gnomAD"""
 
     hl.init(default_reference='GRCh38')
-
-    # generate hgdp + 1kg + PROPHECY dataset using VDS combiner
-    combiner = hl.vds.new_combiner(
-        output_path=output_path('1-0.vds'),
-        temp_path=output_path('1-0.vds', 'tmp'),
-        vds_paths=[HGDP_ONEKG, PROPHECY],
-        use_genome_default_intervals=True,
-    )
-
-    combiner.run()
 
     vds = hl.vds.read_vds(HGDP_1KG_PROPHECY)
 
