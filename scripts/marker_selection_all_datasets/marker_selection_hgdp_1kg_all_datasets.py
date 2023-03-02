@@ -1,21 +1,36 @@
 #!/usr/bin/env python3
 
-"""Pipeline for choosing markers for HGDP/1kG + PROPHECY datasets"""
+"""Pipeline for choosing markers for datasets, using an input VDS dataset
+and the HGDP/1kG datasets"""
 
 from cpg_utils.hail_batch import output_path, dataset_path
 import hail as hl
+import click
 
-HGDP_1KG_PROPHECY = dataset_path('vds/combiner/1-0.vds')
-
+HGDP_ONEKG = dataset_path('vds/1-0.vds', dataset='hgdp-1kg')
 NUM_ROWS_BEFORE_LD_PRUNE = 200000
 
-
-def main():
+@click.command()
+@click.option('--path', help='VDS dataset path, without the gs://cpg-{dataset}-{access-level} prefix', required=True)
+@click.option('--output-version', help='Version of dataset made by VDS combiner, e.g., 1-0', required=True)
+def main(path, output_version):
     """choosing markers for HGDP/1kG datasets according to gnomAD"""
 
     hl.init(default_reference='GRCh38')
 
-    vds = hl.vds.read_vds(HGDP_1KG_PROPHECY)
+    INPUT_DATASET = dataset_path(path)
+    COMBINED_DATASET = output_path(f'{output_version}.vds')
+
+    combiner = hl.vds.new_combiner(
+        output_path=output_path(f'{output_version}.vds'),
+        temp_path=output_path(f'{output_version}.vds', 'tmp'),
+        vds_paths=[HGDP_ONEKG, INPUT_DATASET],
+        use_genome_default_intervals=True,
+    )
+
+    combiner.run()
+
+    vds = hl.vds.read_vds(COMBINED_DATASET)
 
     # split multiallelics, then densify
     vds = hl.vds.split_multi(vds, filter_changed_loci=True)

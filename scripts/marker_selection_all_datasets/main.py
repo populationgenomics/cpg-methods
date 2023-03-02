@@ -11,15 +11,15 @@ service_backend = hb.ServiceBackend(
     remote_tmpdir=remote_tmpdir(),
 )
 
-batch = hb.Batch(name='hgdp-1kg-marker-selection', backend=service_backend)
+batch = hb.Batch(name='marker-selection', backend=service_backend)
 
 dataproc.hail_dataproc_job(
     batch,
-    'marker_selection_hgdp_1kg.py',
+    'marker_selection_hgdp_1kg_all_datasets.py',
     max_age='6h',
     num_secondary_workers=20,
     init=['gs://cpg-common-main/hail_dataproc/install_common.sh'],
-    job_name='hgdp_1kg_marker_selection',
+    job_name='marker_selection',
 )
 
 batch.run()
