@@ -26,8 +26,8 @@ def main(path, output_version):
     # The GT field is used downstream for the variant_qc() function
     hgdp_onekg = hl.vds.read_vds(HGDP_ONEKG)
     input_dataset = hl.vds.read_vds(INPUT_DATASET)
-    hgdp_onekg = hgdp_onekg.variant_data.select_entries(hgdp_onekg.variant_data.LGT, hgdp_onekg.variant_data.LA)
-    input_dataset = input_dataset.variant_data.select_entries(input_dataset.variant_data.LGT, input_dataset.variant_data.LA)
+    hgdp_onekg.variant_data = hgdp_onekg.variant_data.select_entries(hgdp_onekg.variant_data.LGT, hgdp_onekg.variant_data.LA)
+    input_dataset.variant_data = input_dataset.variant_data.select_entries(input_dataset.variant_data.LGT, input_dataset.variant_data.LA)
     # save datasets to tmp bucket
     tmp_hgdp_onekg_output = output_path(f'filtered_entries_hgdp_1kg.vds', 'tmp')
     tmp_input_dataset_output = output_path(f'filtered_entries_{output_version}.vds', 'tmp')
