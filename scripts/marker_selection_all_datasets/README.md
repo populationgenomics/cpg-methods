@@ -1,4 +1,4 @@
-# Create sites table for HGDP + 1kG datasets
+# Create sites table for input dataset + HGDP/1kG combined dataset
 
 This runs a Hail query script in Dataproc using Hail Batch in order to create a sites table for an input dataset and the combined HGDP + 1kG datasets. To run, use pip to install the analysis-runner, then execute the following command:
 
