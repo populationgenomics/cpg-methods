@@ -14,7 +14,11 @@ NUM_ROWS_BEFORE_LD_PRUNE = 200000
 @click.option('--path', help='VDS dataset path, without the gs://cpg-{dataset}-{access-level} prefix', required=True)
 @click.option('--output-version', help='Version of dataset made by VDS combiner, e.g., 1-0', required=True)
 def main(path, output_version):
-    """choosing markers for HGDP/1kG datasets according to gnomAD"""
+    """ Create a sites table using a representative subset of variants based off of 
+    the following criteria:
+    Sites are biallelic, autosomal, have an allele frequency above 1%, have a call rate above 99%, 
+    and have an inbreeding coefficient > -0.25.
+    """
 
     hl.init(default_reference='GRCh38')
 
@@ -69,14 +73,13 @@ def main(path, output_version):
         & (mt.IB.f_stat > -0.25)
     )
 
+    checkpoint_path = output_path('hgdp_1kg_prophecy_pre_pruning.mt', 'tmp')
+    mt = mt.checkpoint(checkpoint_path, overwrite=True)
+    nrows = mt.count_rows()
+    print(f'mt.count_rows() = {nrows}')
     # downsize input variants for ld_prune
     # otherwise, persisting the pruned_variant_table will cause
     # script to fail. See https://github.com/populationgenomics/ancestry/pull/79
-    checkpoint_path = output_path('hgdp_1kg_prophecy_pre_pruning.mt', 'tmp')
-    mt = mt.checkpoint(checkpoint_path, overwrite=True)
-
-    nrows = mt.count_rows()
-    print(f'mt.count_rows() = {nrows}')
     mt = mt.sample_rows(
         NUM_ROWS_BEFORE_LD_PRUNE / nrows, seed=12345
     )
