@@ -11,9 +11,9 @@ HGDP_ONEKG = dataset_path('vds/v1-0.vds', dataset='hgdp-1kg')
 NUM_ROWS_BEFORE_LD_PRUNE = 200000
 
 @click.command()
-@click.option('--path', help='VDS dataset path, without the gs://cpg-{dataset}-{access-level} prefix', required=True)
+@click.option('--vds-path', help='path to input VDS, without the gs://cpg-{dataset}-{access-level} prefix', required=True)
 @click.option('--output-version', help='Version of dataset made by VDS combiner, e.g., v1-0', required=True)
-def main(path, output_version):
+def main(vds_path, output_version):
     """ Create a sites table using a representative subset of variants based off of 
     the following criteria:
     Sites are biallelic, autosomal, have an allele frequency above 1%, have a call rate above 99%, 
@@ -22,25 +22,25 @@ def main(path, output_version):
 
     hl.init(default_reference='GRCh38')
 
-    INPUT_DATASET = dataset_path(path)
-    COMBINED_DATASET = output_path(f'{output_version}.vds')
+    INPUT_VDS = dataset_path(vds_path)
+    COMBINED_DATASET = dataset_path(f'vds/combiner/{output_version}.vds')
 
     # extract only relevant entries so hgdp/1kg and input datasets are the same
     # only LGT and LA entries are needed to calculate the GT field
     # The GT field is used downstream for the variant_qc() function
     hgdp_onekg = hl.vds.read_vds(HGDP_ONEKG)
-    input_dataset = hl.vds.read_vds(INPUT_DATASET)
+    input_dataset = hl.vds.read_vds(INPUT_VDS)
     hgdp_onekg.variant_data = hgdp_onekg.variant_data.select_entries(hgdp_onekg.variant_data.LGT, hgdp_onekg.variant_data.LA)
     input_dataset.variant_data = input_dataset.variant_data.select_entries(input_dataset.variant_data.LGT, input_dataset.variant_data.LA)
     # save datasets to tmp bucket
-    tmp_hgdp_onekg_output = output_path(f'filtered_entries_hgdp_1kg.vds', 'tmp')
-    tmp_input_dataset_output = output_path(f'filtered_entries_{output_version}.vds', 'tmp')
+    tmp_hgdp_onekg_output = dataset_path(f'vds/combiner/filtered_entries_hgdp_1kg.vds', 'tmp')
+    tmp_input_dataset_output = dataset_path(f'vds/combiner/filtered_entries_{output_version}.vds', 'tmp')
     hgdp_onekg.write(tmp_hgdp_onekg_output)
     input_dataset.write(tmp_input_dataset_output)
 
     combiner = hl.vds.new_combiner(
-        output_path=output_path(f'{output_version}.vds', 'tmp'),
-        temp_path=output_path(f'{output_version}.vds', 'tmp'),
+        output_path=dataset_path(f'vds/combiner/{output_version}.vds', 'tmp'),
+        temp_path=dataset_path(f'vds/combiner/temp_{output_version}.vds', 'tmp'),
         vds_paths=[tmp_hgdp_onekg_output, tmp_input_dataset_output],
         use_genome_default_intervals=True,
     )
@@ -90,7 +90,7 @@ def main(path, output_version):
     )
     # repartition table after pruning
     pruned_variant_table = pruned_variant_table.repartition(100, shuffle=False)
-    pruned_variant_table_path = dataset_path('pruned_variants.ht')
+    pruned_variant_table_path = output_path('pruned_variants.ht')
     pruned_variant_table.write(pruned_variant_table_path)
 
 

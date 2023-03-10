@@ -6,7 +6,7 @@ To run, use pip to install the analysis-runner, then execute the following comma
 
 ```sh
 analysis-runner --dataset $INPUT_DATASET \
---access-level $ACCESS_LEVEL --output-dir "vds/hgdp-1kg" \
+--access-level $ACCESS_LEVEL --output-dir "sites_table/v1-0" \
 --description "create sites table" python3 main.py \
---path $PATH --output-version $OUTPUT_VERSION
+--vds-path $PATH --output-version $OUTPUT_VERSION
 ```
