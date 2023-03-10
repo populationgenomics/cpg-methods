@@ -88,7 +88,7 @@ def main(path, output_version):
     pruned_variant_table = hl.ld_prune(
         mt.GT, r2=0.1, bp_window_size=500000
     )
-    pruned_variant_table_path = output_path('pruned_variants.ht')
+    pruned_variant_table_path = dataset_path('pruned_variants.ht')
     pruned_variant_table.write(pruned_variant_table_path)
 
 
