@@ -39,7 +39,7 @@ def main(path, output_version):
     input_dataset.write(tmp_input_dataset_output)
 
     combiner = hl.vds.new_combiner(
-        output_path=output_path(f'{output_version}.vds'),
+        output_path=output_path(f'{output_version}.vds', 'tmp'),
         temp_path=output_path(f'{output_version}.vds', 'tmp'),
         vds_paths=[tmp_hgdp_onekg_output, tmp_input_dataset_output],
         use_genome_default_intervals=True,
@@ -88,6 +88,8 @@ def main(path, output_version):
     pruned_variant_table = hl.ld_prune(
         mt.GT, r2=0.1, bp_window_size=500000
     )
+    # repartition table after pruning
+    pruned_variant_table = pruned_variant_table.repartition(100, shuffle=False)
     pruned_variant_table_path = dataset_path('pruned_variants.ht')
     pruned_variant_table.write(pruned_variant_table_path)
 
