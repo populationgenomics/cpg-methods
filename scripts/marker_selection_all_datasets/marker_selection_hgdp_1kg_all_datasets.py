@@ -7,7 +7,7 @@ from cpg_utils.hail_batch import output_path, dataset_path
 import hail as hl
 import click
 
-HGDP_ONEKG = dataset_path('vds/1-0.vds', dataset='hgdp-1kg')
+HGDP_ONEKG = dataset_path('vds/v1-0.vds', dataset='hgdp-1kg')
 NUM_ROWS_BEFORE_LD_PRUNE = 200000
 
 @click.command()
