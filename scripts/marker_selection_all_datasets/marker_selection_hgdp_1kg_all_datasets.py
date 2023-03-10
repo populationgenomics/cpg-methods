@@ -12,7 +12,7 @@ NUM_ROWS_BEFORE_LD_PRUNE = 200000
 
 @click.command()
 @click.option('--path', help='VDS dataset path, without the gs://cpg-{dataset}-{access-level} prefix', required=True)
-@click.option('--output-version', help='Version of dataset made by VDS combiner, e.g., 1-0', required=True)
+@click.option('--output-version', help='Version of dataset made by VDS combiner, e.g., v1-0', required=True)
 def main(path, output_version):
     """ Create a sites table using a representative subset of variants based off of 
     the following criteria:
