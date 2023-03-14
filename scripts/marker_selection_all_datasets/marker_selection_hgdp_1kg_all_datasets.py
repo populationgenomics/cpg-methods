@@ -33,7 +33,7 @@ def main(vds_path, output_version):
     hgdp_onekg.variant_data = hgdp_onekg.variant_data.select_entries(hgdp_onekg.variant_data.LGT, hgdp_onekg.variant_data.LA)
     input_dataset.variant_data = input_dataset.variant_data.select_entries(input_dataset.variant_data.LGT, input_dataset.variant_data.LA)
     # save datasets to tmp bucket
-    tmp_hgdp_onekg_output = dataset_path(f'vds/combiner/filtered_entries_hgdp_1kg.vds', 'tmp')
+    tmp_hgdp_onekg_output = dataset_path(f'vds/combiner/filtered_entries_hgdp_1kg_{output_version}.vds', 'tmp')
     tmp_input_dataset_output = dataset_path(f'vds/combiner/filtered_entries_{output_version}.vds', 'tmp')
     hgdp_onekg.write(tmp_hgdp_onekg_output)
     input_dataset.write(tmp_input_dataset_output)
