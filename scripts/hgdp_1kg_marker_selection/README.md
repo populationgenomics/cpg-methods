@@ -4,6 +4,6 @@ This runs a Hail query script in Dataproc using Hail Batch in order to create a 
 
 ```sh
 analysis-runner --dataset hgdp-1kg \
---access-level test --output-dir "vds" \
+--access-level test --output-dir "sites_table/v1-0" \
 --description "create HGDP/1kG sites table" python3 main.py
 ```
