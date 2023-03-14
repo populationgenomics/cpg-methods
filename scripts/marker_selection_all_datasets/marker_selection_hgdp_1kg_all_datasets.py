@@ -23,7 +23,7 @@ def main(vds_path, output_version):
     hl.init(default_reference='GRCh38')
 
     INPUT_VDS = dataset_path(vds_path)
-    COMBINED_DATASET = dataset_path(f'vds/combiner/{output_version}.vds')
+    COMBINED_DATASET = dataset_path(f'vds/combiner/{output_version}.vds', 'tmp')
 
     # extract only relevant entries so hgdp/1kg and input datasets are the same
     # only LGT and LA entries are needed to calculate the GT field
