@@ -6,9 +6,9 @@ from analysis_runner import dataproc
 from cpg_utils.hail_batch import get_config, remote_tmpdir
 
 @click.command()
-@click.option('--path', help='VDS dataset path, without the gs://cpg-{dataset}-{access-level} prefix', required=True)
+@click.option('--vds-path', help='VDS dataset path, without the gs://cpg-{dataset}-{access-level} prefix', required=True)
 @click.option('--output-version', help='Version of dataset made by VDS combiner, e.g., 1-0', required=True)
-def main(path: str, output_version: str):
+def main(vds_path: str, output_version: str):
     """
     runs a script inside dataproc to execute the marker selection
     """
@@ -24,7 +24,7 @@ def main(path: str, output_version: str):
 
     dataproc.hail_dataproc_job(
         batch,
-        script=f'marker_selection_hgdp_1kg_all_datasets.py --path {path} --output-version {output_version}',
+        script=f'marker_selection_hgdp_1kg_all_datasets.py --vds-path {vds_path} --output-version {output_version}',
         max_age='6h',
         num_secondary_workers=20,
         init=['gs://cpg-common-main/hail_dataproc/install_common.sh'],
